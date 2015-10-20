@@ -55,7 +55,14 @@ var commands = {
 
             Giphy.search(bot, message.channel, tags);
         }
-    }
+    },
+    "say": {
+        usage: "<message>",
+        description: "The bot says the message.",
+        process: function(bot, message, suffix){
+            bot.sendMessage(message.channel, suffix, true);
+        }
+    },
 };
 
 bot.on("message", function (message) {
