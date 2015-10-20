@@ -59,8 +59,15 @@ var commands = {
     "say": {
         usage: "<message>",
         description: "The bot says the message.",
-        process: function(bot, message, suffix){
+        process: function(bot, message, suffix) {
             bot.sendMessage(message.channel, suffix, true);
+        }
+    },
+    "log": {
+        usage: "<log message>",
+        description: "Logs the message to the bot console.",
+        process: function(bot, message, suffix) {
+            console.log(message.content);
         }
     },
 };
