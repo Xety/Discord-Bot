@@ -16,8 +16,6 @@ var commands = {
     "help": {
         description: "Lists of all commands.",
         process: function(bot, message, suffix) {
-
-
             for(var cmd in commands) {
                 var info = "`" + Config.bot.prefix + cmd + "`";
                 var usage = commands[cmd].usage;
