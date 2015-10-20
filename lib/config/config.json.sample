@@ -1,0 +1,24 @@
+{
+    "user": {
+        "email": "You awesome Email.",
+        "password": "Your awesome Password."
+    },
+    "youtube": {
+        "api_key": "Your YouTube API key."
+    },
+    "giphy": {
+        "api_key": "dc6zaTOxFJmzC",
+        "url": "http://api.giphy.com/v1/gifs/",
+        "rating": "r",
+        "limit": 1,
+        "format": "json",
+        "endpoint": "random"
+    },
+    "bot": {
+        "prefix": "!",
+        "permissions": {
+            "owner": "manageServer",
+            "moderator": "kickMembers"
+        }
+    }
+}
