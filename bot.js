@@ -2,11 +2,10 @@ var Discord = require("discord.js");
 var Config = require("./lib/config/config.json");
 
 //API
-var yt = require("./lib/api/youtube");
-var YouTube = new yt();
+var YouTube = require("./lib/api/youtube");
+var Giphy = require("./lib/api/giphy");
 
-var gy = require("./lib/api/giphy");
-var Giphy = new gy();
+var Permissions = require("./lib/permissions");
 
 
 var bot = new Discord.Client();
@@ -32,8 +31,6 @@ var commands = {
 
                 bot.sendMessage(message.author, info);
             }
-
-            bot.sendMessage(message.author, "Some commands may be restricted due to the permissions.");
         }
     },
     "ping": {
@@ -69,23 +66,17 @@ var commands = {
         usage: "<log message>",
         description: "Logs the message to the bot console.",
         process: function(bot, message, suffix) {
-            console.log(message.content);
+            if(Permissions.isAllowed(message.author, Config.bot.permissions.owner)) {
+                console.log(message.content);
+            } else {
+                bot.sendMessage(message.channel, "You can't use this command.");
+            }
         }
     },
     "commit": {
         description: "Returns the last git commit this bot is running.",
         process: function(bot, message, suffix) {
-            var roles = message.author.roles;
-
-            var permission = false;
-
-            for(i = 0; i < roles.length; i++) {
-                if (roles[i].name === Config.bot.permissions.owner) {
-                    permission = true;
-                }
-            }
-
-            if(permission) {
+            if(Permissions.isAllowed(message.author, Config.bot.permissions.owner)) {
                 var commit = require('child_process').spawn('git', ['log', '--stat', '--oneline', '-1']);
 
                 commit.stdout.on('data', function(data) {
