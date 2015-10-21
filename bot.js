@@ -25,9 +25,11 @@ var commands = {
                 }
 
                 var description = commands[cmd].description;
+
                 if(description){
                     info += "\n\t*" + description + "*";
                 }
+
                 bot.sendMessage(message.author, info);
             }
 
@@ -68,6 +70,36 @@ var commands = {
         description: "Logs the message to the bot console.",
         process: function(bot, message, suffix) {
             console.log(message.content);
+        }
+    },
+    "commit": {
+        description: "Returns the last git commit this bot is running.",
+        process: function(bot, message, suffix) {
+            var roles = message.author.roles;
+
+            var permission = false;
+
+            for(i = 0; i < roles.length; i++) {
+                if (roles[i].name === Config.bot.permissions.owner) {
+                    permission = true;
+                }
+            }
+
+            if(permission) {
+                var commit = require('child_process').spawn('git', ['log', '--stat', '--oneline', '-1']);
+
+                commit.stdout.on('data', function(data) {
+                    bot.sendMessage(message.channel, "```" + data + "```");
+                });
+
+                commit.on('close',function(code) {
+                    if(code !== 0){
+                        bot.sendMessage(message.channel, "Failed checking git version!");
+                    }
+                });
+            } else {
+                bot.sendMessage(message.channel, "You can't use this command.");
+            }
         }
     },
 };
