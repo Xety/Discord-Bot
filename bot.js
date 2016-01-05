@@ -7,31 +7,27 @@ var Giphy = require("./lib/api/giphy");
 
 var Permissions = require("./lib/permissions");
 
+var trigger = "!"; //you can change that as you please, or set up a command to change it on the fly.
+
 
 var bot = new Discord.Client();
 
+var help = [ // so you dont have to deal with linespamming
+    "Help",
+    "Ping",
+    "Youtube",
+    "Gif",
+    "Say",
+    "Log",
+    "Commit"
+    ]
 
 var commands = {
     "help": {
         description: "Lists of all commands.",
         process: function(bot, message, suffix) {
-            for(var cmd in commands) {
-                var info = "`" + Config.bot.prefix + cmd + "`";
-                var usage = commands[cmd].usage;
-
-                if(usage) {
-                    info += " " + usage;
-                }
-
-                var description = commands[cmd].description;
-
-                if(description){
-                    info += "\n\t*" + description + "*";
-                }
-
-                bot.sendMessage(message.author, info);
-            }
-        }
+           bot.sendMessage(msg.author, "Here is a list of my currently availiable commands: " + help + ".")
+           bot.sendMessage(msg.channel, "Please check your PM's")
     },
     "ping": {
         description: "Useful for checking if the bot is alive.",
@@ -95,33 +91,16 @@ var commands = {
     },
 };
 
-bot.on("message", function (message) {
-
-    if(!bot.user.equals(message.author) && (message.content[0] === Config.bot.prefix || message.content.indexOf(bot.user.mention()) === 0)) {
-        var command = message.content.split(" ")[0].substring(1);
-        var suffix = message.content.substring(command.length+2);
-
-        if(message.content.indexOf(bot.user.mention()) === 0){
-            command = msg.content.split(" ")[1];
-            suffix = msg.content.substring(bot.user.mention().length + command.length + 2);
-        }
-
-        var cmd = commands[command];
-
-        if (cmd) {
-            cmd.process(bot, message, suffix);
-        } else {
-            bot.sendMessage(message.channel, "Invalid command **" + Config.bot.prefix + command + "**. Type `!help` to see the list of commands.");
-        }
-    } else {
-        if(bot.user.equals(message.author)){
-            return;
-        }
-
-        if (message.author.id != bot.user.id && message.isMentioned(bot.user)) {
-            bot.sendMessage(message.channel, message.author + ", yeah ?");
-        }
+bot.on("message", function (msg) {
+  //Shorter, more efficient.
+  if (msg.content[0] === trigger) {
+    var command = msg.content.toLowerCase().split(" ")[0].substring(1);
+    var suffix = msg.content.toLowerCase().substring(command.length + 2);
+    var cmd = commands[command];
+    if (cmd) {
+      cmd.process(bot, msg, suffix);
     }
+  }
 });
 
 
